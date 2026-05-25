@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raylabs × Salesforce — Ray White Strategic Initiative</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --gold: #F5A623;
+    --gold-dark: #C8860A;
+    --gold-light: #FFD166;
+    --red: #C8102E;
+    --bg: #0F0F1A;
+    --card: #1A1A2E;
+    --card2: #20203A;
+    --border: #2A2A4A;
+    --border-gold: rgba(245,166,35,0.35);
+    --text: #FFFFFF;
+    --text2: #A0A0C0;
+    --text3: #6B6B90;
+    --green: #00D4A0;
+    --green-dim: rgba(0,212,160,0.15);
+    --red-dim: rgba(200,16,46,0.15);
+    --gold-dim: rgba(245,166,35,0.12);
+    --gold-glow: rgba(245,166,35,0.25);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 32px;
+    background: rgba(15,15,26,0.95);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .rw-monogram {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: #000; letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+  .wordmark { font-size: 18px; font-weight: 800; color: var(--text); }
+  .wordmark span { color: var(--gold); }
+  .header-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .btn-header {
+    padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--border); background: var(--card);
+    color: var(--text2); transition: all 0.2s;
+  }
+  .btn-header:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-save {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    border-color: var(--gold); color: #000 !important;
+  }
+  .btn-save:hover { opacity: 0.85; }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; gap: 0;
+    padding: 0 32px;
+    background: rgba(15,15,26,0.8);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 69px; z-index: 99;
+    backdrop-filter: blur(12px);
+  }
+  .tab-btn {
+    padding: 14px 22px; font-size: 13px; font-weight: 600;
+    color: var(--text3); cursor: pointer; border: none;
+    background: none; border-bottom: 3px solid transparent;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text2); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 1200px; margin: 0 auto; padding: 40px 32px 80px; }
+  .section { margin-bottom: 60px; }
+  .section-title {
+    font-size: 22px; font-weight: 800; margin-bottom: 6px; color: var(--text);
+  }
+  .section-sub { font-size: 14px; color: var(--text2); margin-bottom: 28px; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0F0F1A 0%, #1A1020 40%, #0F0F1A 100%);
+    border: 1px solid var(--border-gold);
+    border-radius: 16px; padding: 60px 48px;
+    text-align: center; position: relative; overflow: hidden;
+    margin-bottom: 60px;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 200px;
+    background: radial-gradient(ellipse, rgba(245,166,35,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-size: 52px; font-weight: 900; line-height: 1.1;
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 16px;
+  }
+  .hero h2 { font-size: 20px; font-weight: 400; color: var(--text2); margin-bottom: 36px; }
+  .hero-stats { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .hero-pill {
+    background: var(--card); border: 1px solid var(--border-gold);
+    border-radius: 40px; padding: 10px 22px;
+    font-size: 14px; font-weight: 600; color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-pill .pnum { color: var(--gold); font-size: 18px; font-weight: 800; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px;
+  }
+  .card-gold { border-color: var(--border-gold); }
+  .card-red { border-color: rgba(200,16,46,0.4); background: var(--red-dim); }
+  .card-green { border-color: rgba(0,212,160,0.4); background: var(--green-dim); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* ── BIG NUMBERS ── */
+  .big-num-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px 20px; text-align: center;
+  }
+  .big-num { font-size: 36px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .big-num-label { font-size: 12px; color: var(--text2); margin-top: 8px; line-height: 1.4; }
+
+  /* ── COMPARISON ── */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 0; }
+  .compare-old { border-color: rgba(200,16,46,0.3); background: rgba(200,16,46,0.06); }
+  .compare-new { border-color: var(--border-gold); background: var(--gold-dim); }
+  .compare-title {
+    font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .compare-old .compare-title { color: var(--red); }
+  .compare-new .compare-title { color: var(--gold); }
+  .compare-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 13px; color: var(--text2); }
+  .compare-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── CHART WRAP ── */
+  .chart-wrap {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px; margin-bottom: 20px;
+  }
+  .chart-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .chart-sub { font-size: 12px; color: var(--text3); margin-bottom: 20px; }
+  .chart-container { position: relative; }
+
+  /* ── STAT CARDS ROW ── */
+  .stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+  .stat-card {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; text-align: center;
+  }
+  .stat-num { font-size: 28px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .stat-label { font-size: 11px; color: var(--text3); margin-top: 6px; line-height: 1.3; }
+
+  /* ── BLOCKQUOTE ── */
+  .quote {
+    border-left: 3px solid var(--gold);
+    padding: 16px 20px; background: var(--gold-dim); border-radius: 0 10px 10px 0;
+    margin: 24px 0;
+  }
+  .quote p { font-size: 15px; font-style: italic; color: var(--text); line-height: 1.6; margin-bottom: 8px; }
+  .quote cite { font-size: 12px; color: var(--gold); font-style: normal; font-weight: 600; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+    padding: 28px; background: var(--card); border: 1px solid var(--border-gold);
+    border-radius: 12px;
+  }
+  .flow-node {
+    background: var(--card2); border: 1px solid var(--border-gold);
+    border-radius: 8px; padding: 12px 28px; font-size: 13px; font-weight: 600;
+    text-align: center; color: var(--text); min-width: 280px;
+  }
+  .flow-node.gold { background: linear-gradient(135deg,rgba(245,166,35,0.2),rgba(200,134,10,0.1)); border-color: var(--gold); color: var(--gold-light); }
+  .flow-arrow { color: var(--gold); font-size: 20px; line-height: 1; padding: 4px 0; }
+
+  /* ── PILLAR CARDS ── */
+  .pillar-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px;
+  }
+  .pillar-num { font-size: 32px; font-weight: 900; color: var(--gold); opacity: 0.3; margin-bottom: 8px; }
+  .pillar-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+  .pillar-list { list-style: none; }
+  .pillar-list li { font-size: 13px; color: var(--text2); padding: 5px 0 5px 18px; position: relative; border-bottom: 1px solid var(--border); }
+  .pillar-list li:last-child { border-bottom: none; }
+  .pillar-list li::before { content: '→'; position: absolute; left: 0; color: var(--gold); }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left; padding: 10px 14px; font-size: 11px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text3); background: var(--card2); border-bottom: 1px solid var(--border);
+  }
+  td { padding: 10px 14px; font-size: 13px; color: var(--text2); border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .td-bold { font-weight: 700; color: var(--text); }
+  .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+  }
+  .badge-gold { background: rgba(245,166,35,0.15); color: var(--gold); border: 1px solid rgba(245,166,35,0.3); }
+  .badge-green { background: rgba(0,212,160,0.15); color: var(--green); border: 1px solid rgba(0,212,160,0.3); }
+  .badge-blue { background: rgba(99,102,241,0.15); color: #818CF8; border: 1px solid rgba(99,102,241,0.3); }
+  .badge-grey { background: rgba(160,160,192,0.1); color: var(--text3); border: 1px solid var(--border); }
+
+  /* ── ARCH DIAGRAM ── */
+  .arch { display: grid; grid-template-columns: 1fr 40px 1fr 40px 1fr; gap: 0; align-items: start; }
+  .arch-col-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-gold);
+  }
+  .arch-node {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .arch-node strong { color: var(--text); display: block; margin-bottom: 2px; }
+  .arch-arrow-col {
+    display: flex; align-items: center; justify-content: center;
+    padding-top: 52px; color: var(--gold); font-size: 22px;
+  }
+  .arch-center { background: rgba(245,166,35,0.05); border-color: var(--border-gold); }
+
+  /* ── RISK TABLE ── */
+  .risk-low { color: var(--green); }
+  .risk-med { color: var(--gold); }
+  .risk-high { color: var(--red); }
+
+  /* ── ROADMAP ── */
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .roadmap-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px; position: relative;
+  }
+  .roadmap-phase {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--gold); margin-bottom: 6px;
+  }
+  .roadmap-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .roadmap-period { font-size: 11px; color: var(--text3); margin-bottom: 16px; }
+  .roadmap-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 12px; color: var(--text2); }
+  .roadmap-item::before { content: '◆'; color: var(--gold); font-size: 8px; margin-top: 3px; flex-shrink: 0; }
+
+  /* ── ROI TAB INPUTS ── */
+  .input-group { margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .input-label { font-size: 13px; color: var(--text2); flex: 1; }
+  .input-note { font-size: 11px; color: var(--text3); }
+  input[type="number"] {
+    width: 130px; padding: 7px 12px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px;
+    text-align: right; transition: border-color 0.2s;
+  }
+  input[type="number"]:focus { outline: none; border-color: var(--gold); }
+  .input-prefix { display: flex; align-items: center; gap: 0; }
+  .input-pfx { background: var(--card2); border: 1px solid var(--border); border-right: none; border-radius: 6px 0 0 6px; padding: 7px 10px; font-size: 13px; color: var(--text3); }
+  .input-prefix input[type="number"] { border-radius: 0 6px 6px 0; border-left: none; }
+  .module-title { font-size: 14px; font-weight: 700; color: var(--gold); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+
+  /* ── INVESTMENT TABLE ── */
+  .inv-table td input[type="number"] { width: 110px; }
+  .discount-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .discount-row label { font-size: 13px; color: var(--text2); }
+  .discount-row input[type="number"] { width: 80px; }
+
+  /* ── OUTPUT PANEL ── */
+  .output-panel {
+    background: var(--card); border: 2px solid var(--border-gold);
+    border-radius: 12px; padding: 28px;
+    box-shadow: 0 0 40px rgba(245,166,35,0.08);
+  }
+  .output-panel .disclaimer { font-size: 11px; color: var(--text3); font-style: italic; margin-bottom: 20px; }
+  .output-row {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .output-row.header { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); padding-bottom: 8px; }
+  .output-row.total { font-weight: 700; color: var(--text); border-bottom: 2px solid var(--border); }
+  .output-row.roi { font-weight: 800; font-size: 15px; border-bottom: none; }
+  .output-row .val-positive { color: var(--green); font-weight: 600; }
+  .output-row .val-gold { color: var(--gold); font-weight: 700; }
+  .output-row .val-dim { color: var(--text3); }
+  .output-row .label-col { color: var(--text2); }
+  .big-output-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 24px; }
+  .big-output-card {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px; text-align: center;
+  }
+  .big-output-card.gold-card { border-color: var(--border-gold); background: var(--gold-dim); }
+  .big-output-num { font-size: 28px; font-weight: 900; color: var(--gold); }
+  .big-output-num.green { color: var(--green); }
+  .big-output-label { font-size: 11px; color: var(--text3); margin-top: 6px; }
+  .payback-stat { text-align: center; margin-top: 16px; font-size: 14px; color: var(--text2); }
+  .payback-stat strong { color: var(--gold); font-size: 16px; }
+
+  /* ── CTA ── */
+  .cta-section { text-align: center; padding: 48px 32px; background: var(--card); border: 1px solid var(--border-gold); border-radius: 16px; }
+  .cta-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .cta-sub { font-size: 14px; color: var(--text2); margin-bottom: 28px; }
+  .btn-cta {
+    display: inline-block; padding: 16px 36px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    color: #000; font-weight: 800; font-size: 15px; border-radius: 8px;
+    cursor: pointer; border: none; transition: all 0.2s;
+    text-decoration: none; letter-spacing: 0.01em;
+  }
+  .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245,166,35,0.35); }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center; padding: 24px 32px;
+    border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text3);
+    margin-top: 40px;
+  }
+
+  /* ── ACTION ITEMS ── */
+  .action-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .action-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px; display: flex; align-items: flex-start; gap: 14px;
+  }
+  .action-icon { font-size: 22px; flex-shrink: 0; }
+  .action-date { font-size: 11px; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
+  .action-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .action-desc { font-size: 12px; color: var(--text2); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .grid-2, .compare, .grid-3, .grid-4, .stat-cards, .arch, .roadmap, .action-cards { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+    .arch-arrow-col { display: none; }
+    .output-row { grid-template-columns: 2fr 1fr 1fr; }
+    .big-output-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <div class="rw-monogram">RW</div>
+    <div>
+      <div class="wordmark">Raylabs <span>×</span> Salesforce</div>
+      <div class="header-sub">Ray White Strategic Initiative — May 2026</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="btn-header" onclick="resetAll()">↩ Reset</button>
+    <button class="btn-header btn-save" onclick="saveAll()">💾 Save</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="tabs">
+  <button class="tab-btn active" onclick="showTab('strategy')">01 — Strategy &amp; Vision</button>
+  <button class="tab-btn" onclick="showTab('platform')">02 — Platform &amp; Architecture</button>
+  <button class="tab-btn" onclick="showTab('roi')">03 — Summary &amp; ROI</button>
+</nav>
+
+<!-- ════════════════════════════════════════
+     TAB 1 — STRATEGY & VISION
+════════════════════════════════════════ -->
+<div id="tab-strategy" class="tab-content active">
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Own the AI Property<br>Search Stack</h1>
+    <h2>Before REA and Domain figure out what's happening.</h2>
+    <div class="hero-stats">
+      <div class="hero-pill">🏠 <span class="pnum">14%</span> Ray White AU market share — #1</div>
+      <div class="hero-pill">🤖 <span class="pnum">37–38%</span> consumers using AI for search (2026)</div>
+      <div class="hero-pill">💰 <span class="pnum">$3,000</span> average vendor listing cost on REA/Domain</div>
+    </div>
+  </div>
+
+  <!-- BURNING PLATFORM -->
+  <div class="section">
+    <div class="section-title">The Burning Platform</div>
+    <div class="section-sub">How people find property is changing faster than anyone forecasts</div>
+    <div class="compare">
+      <div class="card compare-old">
+        <div class="compare-title">⛔ The Old World — Portal Dependent</div>
+        <div class="compare-item"><span class="compare-icon">🔍</span><span>Buyer searches REA or Domain, filters by suburb, bedrooms, price</span></div>
+        <div class="compare-item"><span class="compare-icon">📋</span><span>Gets a static list, clicks through listings one by one</span></div>
+        <div class="compare-item"><span class="compare-icon">📞</span><span>Eventually contacts an agent — the portal owns the relationship</span></div>
+        <div class="compare-item"><span class="compare-icon">💸</span><span>Vendor pays ~$3,000 to list — fee goes to REA or Domain</span></div>
+        <div class="compare-item"><span class="compare-icon">⚠️</span><span>Ray White is invisible unless they pay the portal for placement</span></div>
+        <div class="compare-item"><span class="compare-icon">📉</span><span>No direct relationship between buyer intent data and Ray White</span></div>
+      </div>
+      <div class="card compare-new">
+        <div class="compare-title">✅ The New World — AI-First</div>
+        <div class="compare-item"><span class="compare-icon">🤖</span><span>Buyer opens ChatGPT, Claude, or Gemini</span></div>
+        <div class="compare-item"><span class="compare-icon">💬</span><span>Asks: "4-bed in Toorak under $2M, walking distance to good schools"</span></div>
+        <div class="compare-item"><span class="compare-icon">⚡</span><span>Gets curated, personalised, contextual answer — instantly</span></div>
+        <div class="compare-item"><span class="compare-icon">🏆</span><span>Only agents whose data IS in the model surface at the top</span></div>
+        <div class="compare-item"><span class="compare-icon">🔓</span><span>Portal listing becomes optional — Ray White owns the lead</span></div>
+        <div class="compare-item"><span class="compare-icon">📈</span><span>First-mover data ownership = permanent, compounding advantage</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAM CHART -->
+  <div class="section">
+    <div class="section-title">The TAM — A Market in Structural Transition</div>
+    <div class="section-sub">LLM-driven property search is on an exponential adoption curve</div>
+    <div class="chart-wrap">
+      <div class="chart-title">AI vs Portals vs Google — Property Search Entry Points</div>
+      <div class="chart-sub">Estimated % share of initial property search queries by channel (2024–2030)</div>
+      <div class="chart-container" style="height:360px;">
+        <canvas id="tamChart"></canvas>
+      </div>
+    </div>
+    <div class="stat-cards">
+      <div class="stat-card"><div class="stat-num">~800M</div><div class="stat-label">ChatGPT weekly active users<br>(Aug 2025)</div></div>
+      <div class="stat-card"><div class="stat-num">+50M</div><div class="stat-label">New ChatGPT users<br>per month</div></div>
+      <div class="stat-card"><div class="stat-num">~27%</div><div class="stat-label">Estimated US search activity<br>already through LLMs</div></div>
+      <div class="stat-card"><div class="stat-num">30–50%</div><div class="stat-label">Projected LLM search share<br>by 2028–2030</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px;text-align:right;">Source: Malcolm Fitzgerald analysis; Situational Awareness paper (situational-awareness.ai); industry estimates</div>
+
+    <div class="quote" style="margin-top:28px;">
+      <p>"The shift is not just about users replacing one search box with another. It is about capability driving behaviour change. As LLMs become more intelligent, more trusted, and more useful, the adoption curve will steepen very quickly. I reckon they will die much quicker."</p>
+      <cite>— Malcolm Fitzgerald, Distinguished Architect, Salesforce</cite>
+    </div>
+  </div>
+
+  <!-- RAY WHITE TODAY -->
+  <div class="section">
+    <div class="section-title">Ray White Today</div>
+    <div class="section-sub">The dominant player — but the ground is shifting</div>
+    <div class="grid-4" style="margin-bottom:28px;">
+      <div class="big-num-card"><div class="big-num">#1</div><div class="big-num-label">Largest real estate network in Australia</div></div>
+      <div class="big-num-card"><div class="big-num">~14%</div><div class="big-num-label">National market share — nearest competitor at ~8%</div></div>
+      <div class="big-num-card"><div class="big-num">400–500K</div><div class="big-num-label">Property sales per year across the network</div></div>
+      <div class="big-num-card"><div class="big-num">6–7%</div><div class="big-num-label">Franchise fee of sales revenue funds the full tech stack</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px;">📦 Current Tech Stack (Franchisees)</div>
+          <table>
+            <tr><td class="td-bold">NurtureCloud</td><td>Prospecting CRM — rich buyer intent data</td></tr>
+            <tr><td class="td-bold">Vault</td><td>Internal CRM / source of truth</td></tr>
+            <tr><td class="td-bold">REA Ignite</td><td>Market data product (want less dependency)</td></tr>
+            <tr><td class="td-bold">Pulse</td><td>Performance analytics</td></tr>
+            <tr><td class="td-bold">Ailo</td><td>Financial platform (family-owned)</td></tr>
+            <tr><td class="td-bold">Nexus Innovations</td><td>New main CRM (arriving soon)</td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="card card-red">
+          <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:14px;">⚠️ Pain Points — Why This Matters Now</div>
+          <div class="compare-item"><span class="compare-icon">📍</span><span>Heavy reliance on REA/Domain for vendor lead generation</span></div>
+          <div class="compare-item"><span class="compare-icon">💸</span><span>Vendors pay ~$3,000/listing fee to portals — Ray White sees none of it</span></div>
+          <div class="compare-item"><span class="compare-icon">🔄</span><span>Shifting AI search behaviour will make portal listings less relevant</span></div>
+          <div class="compare-item"><span class="compare-icon">👁️</span><span>No control over how Ray White appears in AI-driven search answers</span></div>
+          <div class="compare-item"><span class="compare-icon">🏃</span><span>REA already has a presence on OpenAI's platform — the race has started</span></div>
+          <div class="compare-item"><span class="compare-icon">⏳</span><span>First-mover window is narrow — estimated 12–18 months before consolidation</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE VISION -->
+  <div class="section">
+    <div class="section-title">The Raylabs Vision</div>
+    <div class="section-sub">What if Ray White owned the AI property search experience?</div>
+
+    <div class="grid-2" style="align-items:start;">
+      <div class="flow">
+        <div class="flow-node">Ray White First-Party Data<br><small style="color:var(--text3);font-weight:400;">NurtureCloud · Vault · Listings · Buyer intent</small></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node gold">Raylabs Platform (Salesforce)<br><small style="opacity:0.8;font-weight:400;">Data Cloud · Agentforce · SPV commercial layer</small></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node">Model-Agnostic Distribution<br><small style="color:var(--text3);font-weight:400;">ChatGPT · Claude · Gemini · Any frontier LLM</small></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node">Consumer AI Property Search<br><small style="color:var(--text3);font-weight:400;">Ray White surfaces at the top of AI answers</small></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node gold">Lead Captured → Salesforce CRM<br><small style="opacity:0.8;font-weight:400;">Off-market deal · Vendor saves $3K · RW wins share</small></div>
+      </div>
+      <div>
+        <div class="grid-3" style="grid-template-columns:1fr;gap:14px;">
+          <div class="card card-gold">
+            <div style="font-size:20px;margin-bottom:8px;">🔐</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Data Sovereignty</div>
+            <div style="font-size:13px;color:var(--text2);">Ray White owns their data. Not OpenAI. Not REA. Not Domain. Full control over what's shared, with whom, at what price.</div>
+          </div>
+          <div class="card card-gold">
+            <div style="font-size:20px;margin-bottom:8px;">🔄</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Model-Agnostic</div>
+            <div style="font-size:13px;color:var(--text2);">Push to ChatGPT, Claude, Gemini — or all three simultaneously. Not locked to any single provider. Maximum distribution.</div>
+          </div>
+          <div class="card card-gold">
+            <div style="font-size:20px;margin-bottom:8px;">🏢</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Neutral Brand = Bigger Moat</div>
+            <div style="font-size:13px;color:var(--text2);">"Raylabs" — not "Ray White Labs". Other agencies can join. More data = better AI = more agents = bigger moat. Network effects compound.</div>
+          </div>
+        </div>
+
+        <div class="quote" style="margin-top:16px;">
+          <p>"If OpenAI builds it, they control the data, the distribution, and the cost. If Raylabs builds it with Salesforce, Ray White controls all three."</p>
+          <cite>— Simon Smith, Salesforce ANZ</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USE CASES -->
+  <div class="section">
+    <div class="section-title">Raylabs Use Cases — Phased Rollout</div>
+    <div class="section-sub">From proof of concept to national platform in 18 months</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Use Case</th><th>Phase</th><th>Type</th><th>Benefit</th><th>Status</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td class="td-bold">AI Property Search Integration</td>
+            <td><span class="badge badge-gold">Phase 1</span></td>
+            <td>Consumer-facing</td>
+            <td>Ray White surfaces in ChatGPT/Claude answers</td>
+            <td><span class="badge badge-blue">Proposed</span></td>
+          </tr>
+          <tr>
+            <td class="td-bold">Off-Market Vendor Capture</td>
+            <td><span class="badge badge-gold">Phase 1</span></td>
+            <td>Agent-facing</td>
+            <td>Capture vendors before they list on REA/Domain</td>
+            <td><span class="badge badge-blue">Proposed</span></td>
+          </tr>
+          <tr>
+            <td class="td-bold">NurtureCloud → Data Cloud Sync</td>
+            <td><span class="badge badge-gold">Phase 1</span></td>
+            <td>Data infrastructure</td>
+            <td>First-party buyer intent data in Salesforce</td>
+            <td><span class="badge badge-blue">Proposed</span></td>
+          </tr>
+          <tr>
+            <td class="td-bold">Buyer Intent RAG Agent</td>
+            <td><span class="badge badge-grey">Phase 2</span></td>
+            <td>Internal agent</td>
+            <td>Auto-match buyers to off-market listings</td>
+            <td><span class="badge badge-grey">Planning</span></td>
+          </tr>
+          <tr>
+            <td class="td-bold">Branded ChatGPT/Claude Experience</td>
+            <td><span class="badge badge-grey">Phase 2</span></td>
+            <td>Consumer-facing</td>
+            <td>Ray White brand inside frontier LLMs</td>
+            <td><span class="badge badge-grey">Planning</span></td>
+          </tr>
+          <tr>
+            <td class="td-bold">Multi-Agency Platform (Raylabs SPV)</td>
+            <td><span class="badge badge-green">Phase 3</span></td>
+            <td>Platform</td>
+            <td>Other agencies join — data moat compounds</td>
+            <td><span class="badge badge-green">Vision</span></td>
+          </tr>
+          <tr>
+            <td class="td-bold">Full AI Search Distribution</td>
+            <td><span class="badge badge-green">Phase 3</span></td>
+            <td>Platform</td>
+            <td>Data to all frontier LLMs via SPV agreements</td>
+            <td><span class="badge badge-green">Vision</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /page -->
+<div class="footer">Prepared by Djordje Gvozdenovic, Salesforce Account Executive | Raylabs Initiative — May 2026 | Estimates only — subject to commercial review and negotiation.</div>
+</div><!-- /tab-strategy -->
+
+
+<!-- ════════════════════════════════════════
+     TAB 2 — PLATFORM & ARCHITECTURE
+════════════════════════════════════════ -->
+<div id="tab-platform" class="tab-content">
+<div class="page">
+
+  <!-- ARCHITECTURE -->
+  <div class="section">
+    <div class="section-title">Technical Architecture</div>
+    <div class="section-sub">Built on Salesforce's global infrastructure — proven, scalable, sovereign</div>
+    <div class="chart-wrap">
+      <div class="arch">
+        <!-- Col 1 -->
+        <div>
+          <div class="arch-col-title">Data Sources</div>
+          <div class="arch-node"><strong>NurtureCloud</strong>Buyer intent & prospecting CRM</div>
+          <div class="arch-node"><strong>REA Ignite</strong>Market data product</div>
+          <div class="arch-node"><strong>Vault</strong>Internal source of truth CRM</div>
+          <div class="arch-node"><strong>Listing Databases</strong>Active & off-market properties</div>
+          <div class="arch-node"><strong>Buyer Intent Signals</strong>Search behaviour & engagement</div>
+        </div>
+        <!-- Arrow 1 -->
+        <div class="arch-arrow-col">→</div>
+        <!-- Col 2 -->
+        <div>
+          <div class="arch-col-title">Raylabs Platform (Salesforce)</div>
+          <div class="arch-node arch-center"><strong>Data Cloud (Data 360)</strong>Unified data ingestion, BigQuery connector, canonical model mapping</div>
+          <div class="arch-node arch-center"><strong>Agentforce RAG Agents</strong>Retrieval-augmented generation, search index, retriever pipelines</div>
+          <div class="arch-node arch-center"><strong>SPV Commercial Layer</strong>Governs LLM data partnership agreements & revenue share</div>
+          <div class="arch-node arch-center"><strong>Salesforce CRM</strong>Lead capture, off-market pipeline, agent activity tracking</div>
+        </div>
+        <!-- Arrow 2 -->
+        <div class="arch-arrow-col">→</div>
+        <!-- Col 3 -->
+        <div>
+          <div class="arch-col-title">Distribution Layer</div>
+          <div class="arch-node"><strong>OpenAI / ChatGPT</strong>Data partnership · Branded RW experience</div>
+          <div class="arch-node"><strong>Anthropic / Claude</strong>API integration · Property Q&A</div>
+          <div class="arch-node"><strong>Google Gemini</strong>Search grounding · AI Overviews</div>
+          <div class="arch-node"><strong>React Frontend</strong>Agent portal · Lead management UI</div>
+          <div class="arch-node"><strong>Lead Capture →</strong>Back into Salesforce CRM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THREE PILLARS -->
+  <div class="section">
+    <div class="section-title">Three TDX Capabilities Power Raylabs</div>
+    <div class="section-sub">Salesforce's latest platform announcements map directly to the Raylabs architecture</div>
+    <div class="grid-3">
+      <div class="pillar-card">
+        <div class="pillar-num">01</div>
+        <div class="pillar-title">Headless Data Cloud</div>
+        <ul class="pillar-list">
+          <li>Model providers call Salesforce endpoints directly</li>
+          <li>Structured first-party data enriches LLM responses</li>
+          <li>Ray White data surfaces at top of AI property answers</li>
+          <li>No portal intermediary required</li>
+          <li>REA/Domain bypass — Ray White owns the distribution</li>
+        </ul>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">02</div>
+        <div class="pillar-title">Experience Builder</div>
+        <ul class="pillar-list">
+          <li>Ray White branded experience inside ChatGPT</li>
+          <li>Consumer searches → gets RW-branded contextual results</li>
+          <li>Lead capture button → straight into Salesforce CRM</li>
+          <li>Commercial data partnership agreement via Salesforce</li>
+          <li>SPV governs rev-share — RW retains margin control</li>
+        </ul>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">03</div>
+        <div class="pillar-title">React / Agentforce Frontend</div>
+        <ul class="pillar-list">
+          <li>Production-ready agent UI (Heroku + React)</li>
+          <li>Estate agents manage leads & off-market captures</li>
+          <li>Buyer intent matching via Agentforce RAG</li>
+          <li>Already proven: similar builds done for Mecca</li>
+          <li>Ishan Reddy has built this stack end-to-end</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHY SALESFORCE -->
+  <div class="section">
+    <div class="section-title">Why Salesforce Is the Right Partner</div>
+    <div class="section-sub">Four unfair advantages no other partner can replicate</div>
+    <div class="grid-2">
+      <div class="card card-gold">
+        <div style="font-size:24px;margin-bottom:10px;">🤝</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">Global LLM Partnerships</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6;">Salesforce has existing commercial relationships with OpenAI, Anthropic, and Google. We can negotiate data partnership agreements on Ray White's behalf — something no real estate agency could do alone. OpenAI Data Partnerships program is live and available.</div>
+      </div>
+      <div class="card card-gold">
+        <div style="font-size:24px;margin-bottom:10px;">🏗️</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">Agentforce + Data Cloud</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6;">RAG pipelines, agent observability, testing center, production-grade enterprise security — all native. The platform already has a footprint in the real estate sector. Sagar Kulkarni (Principal Data & AI Architect) and Ishan Reddy (Agentforce Specialist) are ready to build.</div>
+      </div>
+      <div class="card card-gold">
+        <div style="font-size:24px;margin-bottom:10px;">🔐</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">Data Sovereignty via SPV</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6;">Special Purpose Vehicle structure: Ray White owns data, controls distribution, sets commercial terms. Not locked to any single frontier lab. Model-agnostic from day one. Ray White can switch providers or add new ones without losing leverage.</div>
+      </div>
+      <div class="card card-gold">
+        <div style="font-size:24px;margin-bottom:10px;">⚡</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;">Proven Team, Fast Execution</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6;">This team has built similar stacks. Ishan Reddy built React/Heroku frontends connecting to ChatGPT and Claude for Mecca. Malcolm Fitzgerald (Distinguished Architect) on technical strategy. DJ + Simon driving the Ray White relationship. We can move in weeks, not quarters.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISKS -->
+  <div class="section">
+    <div class="section-title">Key Risks &amp; Mitigations</div>
+    <div class="section-sub">Transparent assessment — and how we address each one</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="td-bold">REA/Domain de-list Ray White</td>
+            <td><span class="risk-med">Medium</span></td>
+            <td><span class="risk-high">High</span></td>
+            <td>Neutral "Raylabs" brand — not positioned as anti-portal. SPV is a separate entity. Ray White keeps Ignite data access.</td>
+          </tr>
+          <tr>
+            <td class="td-bold">OpenAI builds direct Ray White app</td>
+            <td><span class="risk-med">Medium</span></td>
+            <td><span class="risk-high">High</span></td>
+            <td>Move fast. Salesforce has the existing relationship advantage. Data ownership via SPV means OpenAI can't extract value unilaterally.</td>
+          </tr>
+          <tr>
+            <td class="td-bold">Low franchisee adoption</td>
+            <td><span class="risk-low">Low</span></td>
+            <td><span class="risk-med">Medium</span></td>
+            <td>NurtureCloud already trusted by franchisees. Raylabs plugs into existing tools — doesn't replace them. Value is immediate and visible.</td>
+          </tr>
+          <tr>
+            <td class="td-bold">Data quality / governance</td>
+            <td><span class="risk-med">Medium</span></td>
+            <td><span class="risk-med">Medium</span></td>
+            <td>Salesforce Data Cloud governance layer handles consent, access control, and data quality. Enterprise-grade from day one.</td>
+          </tr>
+          <tr>
+            <td class="td-bold">Portal incumbency / market inertia</td>
+            <td><span class="risk-high">High</span></td>
+            <td><span class="risk-med">Medium</span></td>
+            <td>Raylabs is an additional channel — not a replacement. Ray White keeps listing on REA while building the AI distribution moat in parallel.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="section">
+    <div class="section-title">Proposed Roadmap</div>
+    <div class="section-sub">Three phases from proof of concept to national platform</div>
+    <div class="roadmap">
+      <div class="roadmap-card" style="border-top:3px solid var(--gold);">
+        <div class="roadmap-phase">Phase 1</div>
+        <div class="roadmap-title">Foundation</div>
+        <div class="roadmap-period">Month 1–3</div>
+        <div class="roadmap-item">NurtureCloud → Salesforce Data Cloud connection</div>
+        <div class="roadmap-item">RAG pipeline on listing + buyer intent data</div>
+        <div class="roadmap-item">Prototype Raylabs chat experience (React)</div>
+        <div class="roadmap-item">1–2 pilot franchisees — real data, real agents</div>
+        <div class="roadmap-item">Commercial framework / SPV structure initiated</div>
+      </div>
+      <div class="roadmap-card" style="border-top:3px solid var(--text3);">
+        <div class="roadmap-phase">Phase 2</div>
+        <div class="roadmap-title">Scale</div>
+        <div class="roadmap-period">Month 4–8</div>
+        <div class="roadmap-item">OpenAI / Anthropic data partnership via Salesforce</div>
+        <div class="roadmap-item">Branded Ray White experience inside ChatGPT</div>
+        <div class="roadmap-item">Off-market lead capture → Salesforce CRM live</div>
+        <div class="roadmap-item">SPV commercial agreements signed</div>
+        <div class="roadmap-item">Agentforce buyer intent matching agent deployed</div>
+      </div>
+      <div class="roadmap-card" style="border-top:3px solid var(--green);">
+        <div class="roadmap-phase">Phase 3</div>
+        <div class="roadmap-title">Full Vision</div>
+        <div class="roadmap-period">Month 9–18</div>
+        <div class="roadmap-item">Open Raylabs to additional agency partners</div>
+        <div class="roadmap-item">Distribution to all major frontier LLMs</div>
+        <div class="roadmap-item">Full analytics (Pulse integration)</div>
+        <div class="roadmap-item">National rollout across franchise network</div>
+        <div class="roadmap-item">Raylabs becomes Australia's neutral RE data platform</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+<div class="footer">Prepared by Djordje Gvozdenovic, Salesforce Account Executive | Raylabs Initiative — May 2026 | Estimates only — subject to commercial review and negotiation.</div>
+</div><!-- /tab-platform -->
+
+
+<!-- ════════════════════════════════════════
+     TAB 3 — SUMMARY & ROI
+════════════════════════════════════════ -->
+<div id="tab-roi" class="tab-content">
+<div class="page">
+
+  <!-- INVESTMENT SUMMARY -->
+  <div class="section">
+    <div class="section-title">Investment Summary</div>
+    <div class="section-sub">Three-phase investment model — update discount to reflect commercial terms</div>
+
+    <div class="discount-row">
+      <label>Global Discount:</label>
+      <div class="input-prefix">
+        <input type="number" id="discountPct" value="20" min="0" max="80" oninput="updateAll()">
+        <span class="input-pfx" style="border-left:none;border-right:1px solid var(--border);border-radius:0 6px 6px 0;order:-1;">%</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="inv-table">
+        <thead><tr><th>Category</th><th>Phase</th><th>AUD List</th><th>AUD Discounted</th></tr></thead>
+        <tbody>
+          <tr><td class="td-bold">Salesforce Data Cloud (Data 360)</td><td><span class="badge badge-gold">Phase 1</span></td><td>$120,000</td><td id="inv1" class="td-bold val-gold">—</td></tr>
+          <tr><td class="td-bold">Agentforce Platform Licences</td><td><span class="badge badge-gold">Phase 1</span></td><td>$85,000</td><td id="inv2" class="td-bold val-gold">—</td></tr>
+          <tr><td class="td-bold">RAG Pipeline Build &amp; Integration</td><td><span class="badge badge-gold">Phase 1</span></td><td>$75,000</td><td id="inv3" class="td-bold val-gold">—</td></tr>
+          <tr><td class="td-bold">React Frontend Development</td><td><span class="badge badge-gold">Phase 1</span></td><td>$50,000</td><td id="inv4" class="td-bold val-gold">—</td></tr>
+          <tr><td class="td-bold">LLM Partnership Setup</td><td><span class="badge badge-grey">Phase 2</span></td><td>$40,000</td><td id="inv5" class="td-bold val-gold">—</td></tr>
+          <tr><td class="td-bold">Branded LLM Experience Build</td><td><span class="badge badge-grey">Phase 2</span></td><td>$60,000</td><td id="inv6" class="td-bold val-gold">—</td></tr>
+          <tr><td class="td-bold">SPV Legal / Commercial Structure</td><td><span class="badge badge-grey">Phase 2</span></td><td>$30,000</td><td id="inv7" class="td-bold val-gold">—</td></tr>
+          <tr><td class="td-bold">Multi-Agency Platform Build</td><td><span class="badge badge-green">Phase 3</span></td><td>$150,000</td><td id="inv8" class="td-bold val-gold">—</td></tr>
+          <tr><td class="td-bold">National Rollout &amp; Training</td><td><span class="badge badge-green">Phase 3</span></td><td>$90,000</td><td id="inv9" class="td-bold val-gold">—</td></tr>
+          <tr style="background:var(--card2);">
+            <td class="td-bold" colspan="2">Total</td>
+            <td class="td-bold">$700,000</td>
+            <td class="td-bold val-gold" id="invTotal">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:11px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">Phase 1 Investment</div>
+        <div style="font-size:22px;font-weight:800;color:var(--text);" id="p1inv">—</div>
+        <div style="font-size:11px;color:var(--text3);">Foundation (Month 1–3)</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">Phase 2 Investment</div>
+        <div style="font-size:22px;font-weight:800;color:var(--text);" id="p2inv">—</div>
+        <div style="font-size:11px;color:var(--text3);">Scale (Month 4–8)</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">Phase 3 Investment</div>
+        <div style="font-size:22px;font-weight:800;color:var(--text);" id="p3inv">—</div>
+        <div style="font-size:11px;color:var(--text3);">Full Vision (Month 9–18)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYBACK CHART -->
+  <div class="section">
+    <div class="section-title">Investment vs. Cumulative Business Value</div>
+    <div class="section-sub">Where the green line crosses the gold bars is your payback point</div>
+    <div class="chart-wrap">
+      <div class="chart-container" style="height:320px;">
+        <canvas id="paybackChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUSINESS VALUE CALCULATOR -->
+  <div class="section">
+    <div class="section-title">Business Value Calculator</div>
+    <div class="section-sub">Update these inputs with your actuals — all outputs recalculate live</div>
+
+    <div class="grid-3" style="align-items:start;gap:20px;">
+
+      <!-- MODULE A -->
+      <div class="card">
+        <div class="module-title">⚡ A — Agent Productivity</div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Agent Hourly Rate (AUD)</div>
+            <div class="input-note">Average fully-loaded cost</div>
+          </div>
+          <div class="input-prefix">
+            <span class="input-pfx">$</span>
+            <input type="number" id="agentRate" value="65" min="0" oninput="updateAll()">
+          </div>
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Hours Saved / Agent / Day</div>
+            <div class="input-note">Via Agentforce automation</div>
+          </div>
+          <input type="number" id="hoursSaved" value="1.5" min="0" step="0.5" oninput="updateAll()">
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Working Days / Year</div>
+          </div>
+          <input type="number" id="workDays" value="240" min="1" oninput="updateAll()">
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Agents on Platform</div>
+            <div class="input-note">Pilot → national</div>
+          </div>
+          <input type="number" id="numAgents" value="500" min="0" oninput="updateAll()">
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Productivity Multiplier</div>
+            <div class="input-note">Quality improvement factor</div>
+          </div>
+          <input type="number" id="prodMulti" value="1.2" min="1" step="0.1" oninput="updateAll()">
+        </div>
+        <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px;">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:6px;">Annual Efficiency Value</div>
+          <div style="font-size:24px;font-weight:800;color:var(--green);" id="efficiencyVal">—</div>
+        </div>
+      </div>
+
+      <!-- MODULE B -->
+      <div class="card">
+        <div class="module-title">📈 B — Market Share &amp; Revenue</div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Current Annual Sales Volume</div>
+            <div class="input-note">14% × ~400K AU sales</div>
+          </div>
+          <input type="number" id="salesVol" value="56000" min="0" oninput="updateAll()">
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Avg GCI per Sale (AUD)</div>
+            <div class="input-note">Ray White network commission</div>
+          </div>
+          <div class="input-prefix">
+            <span class="input-pfx">$</span>
+            <input type="number" id="gciPerSale" value="10000" min="0" oninput="updateAll()">
+          </div>
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Phase 2 Market Share Uplift (%)</div>
+            <div class="input-note">Additional share captured</div>
+          </div>
+          <input type="number" id="shareUplift2" value="2.0" min="0" step="0.5" oninput="updateAll()">
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Phase 3 Market Share Uplift (%)</div>
+            <div class="input-note">Full platform target</div>
+          </div>
+          <input type="number" id="shareUplift3" value="4.0" min="0" step="0.5" oninput="updateAll()">
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Off-Market Capture Rate (%)</div>
+            <div class="input-note">Vendors going off-market via Raylabs</div>
+          </div>
+          <input type="number" id="offMarketRate" value="10" min="0" oninput="updateAll()">
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Vendor Listing Cost Saved (AUD)</div>
+            <div class="input-note">Per off-market deal vs REA/Domain</div>
+          </div>
+          <div class="input-prefix">
+            <span class="input-pfx">$</span>
+            <input type="number" id="listingCost" value="3000" min="0" oninput="updateAll()">
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px;">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Phase 2 Revenue Uplift</div>
+          <div style="font-size:20px;font-weight:800;color:var(--green);margin-bottom:8px;" id="revUplift2">—</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Phase 3 Revenue Uplift</div>
+          <div style="font-size:20px;font-weight:800;color:var(--green);" id="revUplift3">—</div>
+        </div>
+      </div>
+
+      <!-- MODULE C -->
+      <div class="card">
+        <div class="module-title">🏢 C — Franchisee Retention</div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Total Franchisees</div>
+            <div class="input-note">Ray White network size</div>
+          </div>
+          <input type="number" id="franchisees" value="1000" min="0" oninput="updateAll()">
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Avg Annual Franchise Fee (AUD)</div>
+            <div class="input-note">~6–7% of avg ~$2M turnover</div>
+          </div>
+          <div class="input-prefix">
+            <span class="input-pfx">$</span>
+            <input type="number" id="franchiseFee" value="150000" min="0" oninput="updateAll()">
+          </div>
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Baseline Franchisee Churn (%)</div>
+            <div class="input-note">Annual attrition rate</div>
+          </div>
+          <input type="number" id="baseChurn" value="5" min="0" step="0.5" oninput="updateAll()">
+        </div>
+        <div class="input-group">
+          <div>
+            <div class="input-label">Churn Reduction via Raylabs (%)</div>
+            <div class="input-note">Platform stickiness benefit</div>
+          </div>
+          <input type="number" id="churnReduction" value="1.5" min="0" step="0.5" oninput="updateAll()">
+        </div>
+        <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px;">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:6px;">Annual Retention Value</div>
+          <div style="font-size:24px;font-weight:800;color:var(--green);" id="retentionVal">—</div>
+        </div>
+
+        <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px;">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">Off-Market Vendor Savings</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Annual savings to vendors</div>
+          <div style="font-size:20px;font-weight:800;color:var(--gold);" id="offMarketVal">—</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px;">Goodwill + competitive advantage vs REA/Domain</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ROI OUTPUT -->
+  <div class="section">
+    <div class="section-title">Combined Value Output</div>
+
+    <div class="output-panel">
+      <div class="disclaimer">All values illustrative — update inputs above with your actuals. Based on Ray White network publicly available data and Salesforce platform benchmarks.</div>
+
+      <div class="output-row header">
+        <div>Metric</div><div style="text-align:right;">Phase 1</div><div style="text-align:right;">Phase 2</div><div style="text-align:right;">Phase 3</div>
+      </div>
+      <div class="output-row">
+        <div class="label-col">Efficiency Value (AUD)</div>
+        <div style="text-align:right;" class="val-positive" id="o-eff1">—</div>
+        <div style="text-align:right;" class="val-positive" id="o-eff2">—</div>
+        <div style="text-align:right;" class="val-positive" id="o-eff3">—</div>
+      </div>
+      <div class="output-row">
+        <div class="label-col">Revenue Uplift / GCI (AUD)</div>
+        <div style="text-align:right;" class="val-dim">—</div>
+        <div style="text-align:right;" class="val-positive" id="o-rev2">—</div>
+        <div style="text-align:right;" class="val-positive" id="o-rev3">—</div>
+      </div>
+      <div class="output-row">
+        <div class="label-col">Off-Market Vendor Savings (AUD)</div>
+        <div style="text-align:right;" class="val-dim">—</div>
+        <div style="text-align:right;" class="val-positive" id="o-om2">—</div>
+        <div style="text-align:right;" class="val-positive" id="o-om3">—</div>
+      </div>
+      <div class="output-row">
+        <div class="label-col">Franchisee Retention Value (AUD)</div>
+        <div style="text-align:right;" class="val-dim">—</div>
+        <div style="text-align:right;" class="val-dim">—</div>
+        <div style="text-align:right;" class="val-positive" id="o-ret3">—</div>
+      </div>
+      <div class="output-row total">
+        <div>Total Business Value (AUD)</div>
+        <div style="text-align:right;" class="val-gold" id="o-bv1">—</div>
+        <div style="text-align:right;" class="val-gold" id="o-bv2">—</div>
+        <div style="text-align:right;" class="val-gold" id="o-bv3">—</div>
+      </div>
+      <div class="output-row">
+        <div class="label-col">Total Investment (discounted)</div>
+        <div style="text-align:right;" id="o-inv1">—</div>
+        <div style="text-align:right;" id="o-inv2">—</div>
+        <div style="text-align:right;" id="o-inv3">—</div>
+      </div>
+      <div class="output-row total">
+        <div>Net Value (AUD)</div>
+        <div style="text-align:right;" class="val-gold" id="o-net1">—</div>
+        <div style="text-align:right;" class="val-gold" id="o-net2">—</div>
+        <div style="text-align:right;" class="val-gold" id="o-net3">—</div>
+      </div>
+      <div class="output-row roi">
+        <div style="color:var(--gold);font-weight:800;">ROI</div>
+        <div style="text-align:right;color:var(--gold);" id="o-roi1">—</div>
+        <div style="text-align:right;color:var(--gold);" id="o-roi2">—</div>
+        <div style="text-align:right;color:var(--gold);" id="o-roi3">—</div>
+      </div>
+
+      <div class="big-output-cards">
+        <div class="big-output-card">
+          <div class="big-output-label" style="margin-bottom:8px;">Total 3-Phase Business Value</div>
+          <div class="big-output-num" id="o-total-val">—</div>
+          <div class="big-output-label" style="margin-top:4px;">AUD cumulative</div>
+        </div>
+        <div class="big-output-card">
+          <div class="big-output-label" style="margin-bottom:8px;">Total Investment (discounted)</div>
+          <div class="big-output-num" id="o-total-inv">—</div>
+          <div class="big-output-label" style="margin-top:4px;">AUD all phases</div>
+        </div>
+        <div class="big-output-card gold-card">
+          <div class="big-output-label" style="margin-bottom:8px;">Net ROI (3-Phase)</div>
+          <div class="big-output-num" id="o-total-roi">—</div>
+          <div class="big-output-label" style="margin-top:4px;">Return on investment</div>
+        </div>
+      </div>
+
+      <div class="payback-stat" id="paybackMsg">—</div>
+    </div>
+  </div>
+
+  <!-- ACTION ITEMS -->
+  <div class="section">
+    <div class="section-title">Proposed Next Steps</div>
+    <div class="action-cards">
+      <div class="action-card">
+        <div class="action-icon">🗓️</div>
+        <div>
+          <div class="action-date">4 June 2026</div>
+          <div class="action-title">Strategic Pitch — Ray White Family Office</div>
+          <div class="action-desc">Present Raylabs vision to Dan &amp; Sam. Lead with long-term platform opportunity, not short-term tactical wins.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-icon">🔧</div>
+        <div>
+          <div class="action-date">Month 1–3</div>
+          <div class="action-title">Phase 1 Proof of Concept</div>
+          <div class="action-desc">Connect NurtureCloud to Data Cloud. Build RAG pipeline. Prototype chat experience with 1–2 pilot franchisees.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-icon">📋</div>
+        <div>
+          <div class="action-date">Pending</div>
+          <div class="action-title">Salesforce Opportunity Registration</div>
+          <div class="action-desc">Register Raylabs as a formal Salesforce opportunity. Assign Data Cloud + Agentforce resources to the build.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-section" style="margin-top:32px;">
+      <div class="cta-title">Let's Build the Future of Real Estate Search Together</div>
+      <div class="cta-sub">Raylabs × Salesforce — the data infrastructure layer for the AI-first property market</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-cta">Schedule Phase 1 Kickoff →</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+<div class="footer">Prepared by Djordje Gvozdenovic, Salesforce Account Executive | Raylabs Initiative — May 2026 | Estimates only — subject to commercial review and negotiation.</div>
+</div><!-- /tab-roi -->
+
+
+<script>
+// ── TAB SWITCHING ──────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (id === 'roi') { updateAll(); updatePaybackChart(); }
+}
+
+// ── CURRENCY FORMAT ────────────────────────────────
+function fmt(n) {
+  if (!isFinite(n) || isNaN(n)) return '—';
+  return new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(Math.round(n));
+}
+function fmtPct(n) {
+  if (!isFinite(n) || isNaN(n) || n === Infinity) return '—';
+  return n.toFixed(1) + '%';
+}
+
+// ── TAM CHART ─────────────────────────────────────
+let tamChart;
+function buildTamChart() {
+  const ctx = document.getElementById('tamChart');
+  if (!ctx) return;
+  const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 340);
+  gradient.addColorStop(0, 'rgba(245,166,35,0.35)');
+  gradient.addColorStop(1, 'rgba(245,166,35,0.0)');
+
+  tamChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['2024','2025','2026','2027','2028','2029','2030'],
+      datasets: [
+        {
+          label: 'LLM / AI Search',
+          data: [3, 8, 18, 28, 38, 46, 54],
+          borderColor: '#F5A623', borderWidth: 3,
+          backgroundColor: gradient,
+          fill: true, tension: 0.4,
+          pointBackgroundColor: '#F5A623', pointRadius: 5, pointHoverRadius: 7
+        },
+        {
+          label: 'Google Search',
+          data: [45, 40, 34, 28, 23, 19, 16],
+          borderColor: '#6B6B90', borderWidth: 2,
+          backgroundColor: 'transparent', fill: false, tension: 0.4,
+          pointBackgroundColor: '#6B6B90', pointRadius: 4, pointHoverRadius: 6
+        },
+        {
+          label: 'Portals (REA / Domain)',
+          data: [52, 52, 48, 44, 39, 35, 30],
+          borderColor: '#C8102E', borderWidth: 2,
+          backgroundColor: 'transparent', fill: false, tension: 0.4, borderDash: [5,4],
+          pointBackgroundColor: '#C8102E', pointRadius: 4, pointHoverRadius: 6
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 1200, easing: 'easeInOutQuart' },
+      plugins: {
+        legend: {
+          labels: { color: '#A0A0C0', font: { family: 'Inter', size: 12 }, padding: 20, boxWidth: 14 }
+        },
+        tooltip: {
+          backgroundColor: '#1A1A2E', titleColor: '#FFFFFF', bodyColor: '#A0A0C0',
+          borderColor: '#2A2A4A', borderWidth: 1,
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(42,42,74,0.8)' },
+          ticks: { color: '#A0A0C0', font: { family: 'Inter', size: 12 } }
+        },
+        y: {
+          min: 0, max: 70,
+          grid: { color: 'rgba(42,42,74,0.8)' },
+          ticks: {
+            color: '#A0A0C0', font: { family: 'Inter', size: 12 },
+            callback: v => v + '%'
+          }
+        }
+      }
+    }
+  });
+}
+
+// ── PAYBACK CHART ──────────────────────────────────
+let paybackChart;
+function buildPaybackChart() {
+  const ctx = document.getElementById('paybackChart');
+  if (!ctx) return;
+  paybackChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Phase 1\n(Month 1–3)', 'Phase 2\n(Month 4–8)', 'Phase 3\n(Month 9–18)'],
+      datasets: [
+        {
+          label: 'Investment (AUD)',
+          data: [0, 0, 0],
+          backgroundColor: ['rgba(245,166,35,0.25)', 'rgba(160,160,192,0.2)', 'rgba(0,212,160,0.15)'],
+          borderColor: ['#F5A623','#6B6B90','#00D4A0'],
+          borderWidth: 2, borderRadius: 6, order: 2
+        },
+        {
+          label: 'Cumulative Business Value (AUD)',
+          data: [0, 0, 0],
+          type: 'line',
+          borderColor: '#00D4A0', borderWidth: 3,
+          backgroundColor: 'rgba(0,212,160,0.08)',
+          fill: true, tension: 0.4,
+          pointBackgroundColor: '#00D4A0', pointRadius: 6, pointHoverRadius: 8,
+          order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 900 },
+      plugins: {
+        legend: {
+          labels: { color: '#A0A0C0', font: { family: 'Inter', size: 12 }, padding: 20, boxWidth: 14 }
+        },
+        tooltip: {
+          backgroundColor: '#1A1A2E', titleColor: '#FFFFFF', bodyColor: '#A0A0C0',
+          borderColor: '#2A2A4A', borderWidth: 1,
+          callbacks: {
+            label: ctx => {
+              const v = ctx.parsed.y;
+              return ` ${ctx.dataset.label}: ${new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(v)}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(42,42,74,0.8)' }, ticks: { color: '#A0A0C0', font: { family: 'Inter', size: 12 } } },
+        y: {
+          grid: { color: 'rgba(42,42,74,0.8)' },
+          ticks: {
+            color: '#A0A0C0', font: { family: 'Inter', size: 12 },
+            callback: v => {
+              if (v >= 1000000) return '$' + (v/1000000).toFixed(1) + 'M';
+              if (v >= 1000) return '$' + (v/1000).toFixed(0) + 'K';
+              return '$' + v;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+// ── MAIN CALCULATE ─────────────────────────────────
+function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+function updateAll() {
+  const disc = getVal('discountPct') / 100;
+  const inv = [120000, 85000, 75000, 50000, 40000, 60000, 30000, 150000, 90000];
+  const ids = ['inv1','inv2','inv3','inv4','inv5','inv6','inv7','inv8','inv9'];
+  ids.forEach((id, i) => {
+    document.getElementById(id).textContent = fmt(inv[i] * (1 - disc));
+  });
+  const p1inv = (inv[0]+inv[1]+inv[2]+inv[3]) * (1 - disc);
+  const p2inv = (inv[4]+inv[5]+inv[6]) * (1 - disc);
+  const p3inv = (inv[7]+inv[8]) * (1 - disc);
+  const totalInv = p1inv + p2inv + p3inv;
+  document.getElementById('invTotal').textContent = fmt(totalInv);
+  document.getElementById('p1inv').textContent = fmt(p1inv);
+  document.getElementById('p2inv').textContent = fmt(p2inv);
+  document.getElementById('p3inv').textContent = fmt(p3inv);
+
+  // Inputs
+  const agentRate = getVal('agentRate');
+  const hoursSaved = getVal('hoursSaved');
+  const workDays = getVal('workDays');
+  const numAgents = getVal('numAgents');
+  const prodMulti = getVal('prodMulti');
+  const salesVol = getVal('salesVol');
+  const gciPerSale = getVal('gciPerSale');
+  const shareUplift2 = getVal('shareUplift2');
+  const shareUplift3 = getVal('shareUplift3');
+  const offMarketRate = getVal('offMarketRate');
+  const listingCost = getVal('listingCost');
+  const franchisees = getVal('franchisees');
+  const franchiseFee = getVal('franchiseFee');
+  const churnReduction = getVal('churnReduction');
+
+  // Module A
+  const effVal = agentRate * hoursSaved * workDays * numAgents * prodMulti;
+  document.getElementById('efficiencyVal').textContent = fmt(effVal);
+
+  // Module B
+  const addSales2 = salesVol * (shareUplift2 / 100);
+  const addSales3 = salesVol * (shareUplift3 / 100);
+  const rev2 = addSales2 * gciPerSale;
+  const rev3 = addSales3 * gciPerSale;
+  const offMarketAnnual = salesVol * (offMarketRate / 100) * listingCost;
+  document.getElementById('revUplift2').textContent = fmt(rev2);
+  document.getElementById('revUplift3').textContent = fmt(rev3);
+  document.getElementById('offMarketVal').textContent = fmt(offMarketAnnual);
+
+  // Module C
+  const retVal = franchisees * (churnReduction / 100) * franchiseFee;
+  document.getElementById('retentionVal').textContent = fmt(retVal);
+
+  // Phase values
+  const bv1 = effVal;                                 // Phase 1: efficiency only
+  const bv2 = effVal + rev2 + offMarketAnnual;        // Phase 2: + revenue + off-market
+  const bv3 = effVal + rev3 + offMarketAnnual + retVal; // Phase 3: + retention
+
+  // Cumulative
+  const cum1 = bv1;
+  const cum2 = cum1 + bv2;
+  const cum3 = cum2 + bv3;
+
+  const net1 = bv1 - p1inv;
+  const net2 = bv1 + bv2 - p1inv - p2inv;
+  const net3 = bv1 + bv2 + bv3 - totalInv;
+  const roi1 = p1inv > 0 ? (bv1 / p1inv) * 100 : 0;
+  const roi2 = (p1inv + p2inv) > 0 ? ((bv1 + bv2) / (p1inv + p2inv)) * 100 : 0;
+  const roi3 = totalInv > 0 ? ((bv1 + bv2 + bv3) / totalInv) * 100 : 0;
+
+  // Output
+  document.getElementById('o-eff1').textContent = fmt(effVal);
+  document.getElementById('o-eff2').textContent = fmt(effVal);
+  document.getElementById('o-eff3').textContent = fmt(effVal);
+  document.getElementById('o-rev2').textContent = fmt(rev2);
+  document.getElementById('o-rev3').textContent = fmt(rev3);
+  document.getElementById('o-om2').textContent = fmt(offMarketAnnual);
+  document.getElementById('o-om3').textContent = fmt(offMarketAnnual);
+  document.getElementById('o-ret3').textContent = fmt(retVal);
+  document.getElementById('o-bv1').textContent = fmt(bv1);
+  document.getElementById('o-bv2').textContent = fmt(bv1 + bv2);
+  document.getElementById('o-bv3').textContent = fmt(bv1 + bv2 + bv3);
+  document.getElementById('o-inv1').textContent = fmt(p1inv);
+  document.getElementById('o-inv2').textContent = fmt(p1inv + p2inv);
+  document.getElementById('o-inv3').textContent = fmt(totalInv);
+  document.getElementById('o-net1').textContent = fmt(net1);
+  document.getElementById('o-net2').textContent = fmt(net2);
+  document.getElementById('o-net3').textContent = fmt(net3);
+  document.getElementById('o-roi1').textContent = fmtPct(roi1);
+  document.getElementById('o-roi2').textContent = fmtPct(roi2);
+  document.getElementById('o-roi3').textContent = fmtPct(roi3);
+
+  const totalVal = bv1 + bv2 + bv3;
+  document.getElementById('o-total-val').textContent = fmt(totalVal);
+  document.getElementById('o-total-inv').textContent = fmt(totalInv);
+  document.getElementById('o-total-roi').textContent = fmtPct(roi3);
+
+  // Payback estimate (simple: when does cumulative value exceed cumulative investment)
+  let paybackMonths = null;
+  if (bv1 >= p1inv) { paybackMonths = 3; }
+  else if (bv1 + bv2 >= p1inv + p2inv) {
+    const extraNeeded = (p1inv + p2inv) - bv1;
+    const monthsIntoP2 = bv2 > 0 ? (extraNeeded / bv2) * 5 : 5;
+    paybackMonths = Math.round(3 + monthsIntoP2);
+  } else if (bv1 + bv2 + bv3 >= totalInv) {
+    const extraNeeded = totalInv - bv1 - bv2;
+    const monthsIntoP3 = bv3 > 0 ? (extraNeeded / bv3) * 10 : 10;
+    paybackMonths = Math.round(8 + monthsIntoP3);
+  }
+  const payEl = document.getElementById('paybackMsg');
+  if (paybackMonths) {
+    payEl.innerHTML = `Estimated payback: <strong>~${paybackMonths} months</strong> from Phase 1 start`;
+  } else {
+    payEl.innerHTML = `Payback period extends beyond Phase 3 with current inputs`;
+  }
+
+  updatePaybackChart(p1inv, p1inv + p2inv, totalInv, cum1, cum2, cum3);
+}
+
+function updatePaybackChart(p1, p12, total, c1, c2, c3) {
+  if (!paybackChart) return;
+  paybackChart.data.datasets[0].data = [p1 || 0, p12 || 0, total || 0];
+  paybackChart.data.datasets[1].data = [c1 || 0, c2 || 0, c3 || 0];
+  paybackChart.update();
+}
+
+// ── SAVE / RESET ───────────────────────────────────
+function saveAll() {
+  const inputs = document.querySelectorAll('input[type="number"]');
+  const state = {};
+  inputs.forEach(i => { state[i.id] = i.value; });
+  localStorage.setItem('raylabs_state', JSON.stringify(state));
+  const btn = document.querySelector('.btn-save');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Saved';
+  setTimeout(() => { btn.textContent = orig; }, 1500);
+}
+function resetAll() {
+  localStorage.removeItem('raylabs_state');
+  document.querySelectorAll('input[type="number"]').forEach(i => {
+    i.value = i.defaultValue;
+  });
+  updateAll();
+}
+function restoreAll() {
+  const saved = localStorage.getItem('raylabs_state');
+  if (!saved) return;
+  const state = JSON.parse(saved);
+  Object.keys(state).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = state[id];
+  });
+}
+
+// ── INIT ───────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  restoreAll();
+  buildTamChart();
+  buildPaybackChart();
+  updateAll();
+});
+</script>
+</body>
+</html>
